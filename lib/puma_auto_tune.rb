@@ -7,7 +7,6 @@ require 'puma_auto_tune/master'
 require 'puma_auto_tune/worker'
 require 'puma_auto_tune/memory'
 
-
 module PumaAutoTune
   INFINITY    = 1/0.0
   RESOURCES = { ram: PumaAutoTune::Memory.new }
@@ -15,7 +14,7 @@ module PumaAutoTune
   extend self
 
   def self.default_ram
-    result = `bin/heroku_ulimit_to_ram`
+    result = `bin/heroku_ulimit_to_ram 2>/dev/null`
     default = if $?.success?
       Integer(result)
     else
@@ -49,6 +48,5 @@ module PumaAutoTune
     hooks.map {|name, hook| hook.auto_cycle }
   end
 end
-
 
 require 'puma_auto_tune/hook'
