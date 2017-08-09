@@ -11,8 +11,8 @@ module PumaAutoTune
     # https://github.com/puma/puma/blob/master/docs/signals.md#puma-signals
     def remove_worker
       previous_worker_count = workers.size
+      send_signal("TTOU")
       until workers.size < previous_worker_count
-        send_signal("TTOU")
         sleep 1
       end
     end
