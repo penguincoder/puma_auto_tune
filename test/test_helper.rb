@@ -17,11 +17,16 @@ class PumaRemote
   end
 
   def wait(regex = %r{booted}, timeout = 30)
-    until log.read.match regex
-      sleep 1
+    Timeout::timeout(timeout) do
+      until log.read.match regex
+        sleep 1
+      end
     end
     sleep 1
     self
+  rescue Timeout::Error
+    puts "Timeout waiting for #{regex.inspect} in \n#{log.read}"
+    false
   end
 
   def cleanup
